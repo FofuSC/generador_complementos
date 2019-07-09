@@ -4,17 +4,22 @@ from M2Crypto import RSA
 from lxml import etree as ET
 import hashlib
 import subprocess
+from datetime import datetime
 
 print("""
 ---------------------------------------------------------------------
 | AL HACER USO DE ESTE SCRIPT DEBE TOMAR EN CUENTA QUE LAS RUTAS DE |
 |  LOS ARCHIVOS NO DEBE IR ENTRE COMILLAS Y QUE EL XML DEL CUAL SE  |
 | QUIERE EXTRAER LOS COMPLEMENTOS DEBE ESTAR PREVIAMENTE MODIFICADO |
----------------------------------------------------------------------\n""")
+|         ASI COMO TAMBIEN DEBE DEJAR EN BLANCO LOS CAMPOS:         |
+|            NoCertificado, Certificado, Serial y fecha             |
+--------------------------------------------------------------------\n""")
 
 get_serial = ""
 get_certificado = ""
 get_sello = ""
+
+fecha = datetime.now().strftime("%Y-%m-%d")+"T"+datetime.now().strftime("%H:%M:%S")
 
 ruta_cadena = raw_input("Archivo Cadena Original: ")
 ruta_cer = raw_input("Archivo CER: ")
@@ -36,7 +41,16 @@ while indice < len(certificado) - 25:
 	indice += 1
 
 def generar_sello( nombre_archivo, llave_pem ):
-	file = open(nombre_archivo, 'r')
+	f1 = open(nombre_archivo, "r")
+	f2 = open("cfdi_modificado.xml", "w")
+	for line in f1:
+		f2.write(line.replace('Certificado=""', 'Certificado="' + str(get_certificado) + '"').replace('NoCertificado=""', 'NoCertificado="' + str(get_serial) + '"').replace('Fecha=""', 'Fecha="' + str(fecha) + '"'))
+		#f2.write(line.replace('Serial=""', 'NoCertificado="' + str(get_serial) + '"'))
+		#f2.write(line.replace('Fecha=""', 'Fecha"' + str(fecha) + "'"))
+	f1.close()
+	f2.close()
+
+	file = open("cfdi_modificado.xml", 'r')
 	comprobante = file.read()
 	file.close()
 	xdoc = ET.fromstring(comprobante)
@@ -48,13 +62,11 @@ def generar_sello( nombre_archivo, llave_pem ):
 	digest = hashlib.new('sha256', str(cadena_original).encode()).digest()
 	get_sello = base64.b64encode(keys.sign(digest, "sha256"))
 
-	print("-------------------- SELLO --------------------")
-	print(get_sello)
+	f1 = open("cfdi_modificado.xml", "r")
+	f2 = open(nombre_archivo, "w")
+	for line in f1:
+		f2.write(line.replace('Sello=""', 'Sello"' + str(get_sello) + "'"))
+	f1.close()
+	f2.close()
 
 generar_sello( ruta_xml, ruta_pem )
-
-print("----------------- CERTIFICADO -----------------")
-print(get_certificado)
-
-print("------------------- SERIAL -------------------")
-print(get_serial)
