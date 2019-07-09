@@ -5,6 +5,12 @@ from lxml import etree as ET
 import hashlib
 import subprocess
 
+print("""-------------------------------------------------------------------
+		| AL HACER USO DE ESTE SCRIPT DEBE TOMAR EN CUENTA QUE LAS RUTAS DE |
+		|  LOS ARCHIVOS NO DEBE IR ENTRE COMILLAS Y QUE EL XML DEL CUAL SE  |
+		| QUIERE EXTRAER LOS COMPLEMENTOS DEBE ESTAR PREVIAMENTE MODIFICADO |
+		 -------------------------------------------------------------------""")
+
 get_serial = ""
 get_certificado = ""
 get_sello = ""
