@@ -44,7 +44,7 @@ def generar_sello( nombre_archivo, llave_pem ):
 	f1 = open(nombre_archivo, "r")
 	f2 = open("cfdi_modificado.xml", "w")
 	for line in f1:
-		f2.write(line.replace('Certificado=""', 'Certificado="' + str(get_certificado) + '"').replace('NoCertificado=""', 'NoCertificado="' + str(get_serial) + '"').replace('Fecha=""', 'Fecha="' + str(fecha) + '"'))
+		f2.write(line.replace('NoCertificado=""', 'NoCertificado="' + str(get_serial) + '"').replace('Certificado=""', 'Certificado="' + str(get_certificado) + '"').replace('Fecha=""', 'Fecha="' + str(fecha) + '"'))
 		#f2.write(line.replace('Serial=""', 'NoCertificado="' + str(get_serial) + '"'))
 		#f2.write(line.replace('Fecha=""', 'Fecha"' + str(fecha) + "'"))
 	f1.close()
@@ -65,7 +65,7 @@ def generar_sello( nombre_archivo, llave_pem ):
 	f1 = open("cfdi_modificado.xml", "r")
 	f2 = open(nombre_archivo, "w")
 	for line in f1:
-		f2.write(line.replace('Sello=""', 'Sello"' + str(get_sello) + "'"))
+		f2.write(line.replace('Sello=""', 'Sello="' + str(get_sello) + '"'))
 	f1.close()
 	f2.close()
 
